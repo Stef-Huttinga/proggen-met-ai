@@ -18,7 +18,57 @@ def load_powerplants():
     data_path = Path(__file__).with_name("powerplants.csv")
     return pd.read_csv(data_path, index_col=0)
 
+
+@st.cache_data
+def load_co2_emissions():
+    data_path = Path(__file__).with_name("co2_emissions.csv")
+    return pd.read_csv(data_path)
+
+
 ppl = load_powerplants()
+co2 = load_co2_emissions()
+
+st.subheader("Estimated annual CO₂ emissions")
+st.caption(
+    "Estimates use installed capacity, an assumed capacity factor and direct operational emission factors."
+)
+
+country_emissions = (
+    co2.groupby("Country", as_index=False)["EstimatedAnnualCO2_tonnes"]
+    .sum()
+    .sort_values("EstimatedAnnualCO2_tonnes", ascending=False)
+)
+fuel_emissions = (
+    co2.groupby("Fueltype", as_index=False)["EstimatedAnnualCO2_tonnes"]
+    .sum()
+    .sort_values("EstimatedAnnualCO2_tonnes", ascending=False)
+)
+
+total_emissions = co2["EstimatedAnnualCO2_tonnes"].sum()
+st.metric("Total estimated emissions", f"{total_emissions:,.0f} t CO₂/year")
+
+chart_col, fuel_col = st.columns(2)
+with chart_col:
+    country_fig = px.bar(
+        country_emissions.head(15),
+        x="EstimatedAnnualCO2_tonnes",
+        y="Country",
+        orientation="h",
+        title="Estimated emissions by country",
+        labels={"EstimatedAnnualCO2_tonnes": "tonnes CO₂/year"},
+    )
+    country_fig.update_layout(yaxis={"categoryorder": "total ascending"})
+    st.plotly_chart(country_fig, width="stretch")
+
+with fuel_col:
+    fuel_fig = px.bar(
+        fuel_emissions,
+        x="Fueltype",
+        y="EstimatedAnnualCO2_tonnes",
+        title="Estimated emissions by fuel",
+        labels={"EstimatedAnnualCO2_tonnes": "tonnes CO₂/year"},
+    )
+    st.plotly_chart(fuel_fig, width="stretch")
 
 # Only keep technologies that have valid commissioning dates and coordinates
 available_techs = sorted(

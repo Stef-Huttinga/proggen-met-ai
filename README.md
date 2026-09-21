@@ -19,6 +19,21 @@ index is configured for this project.
 The app reads `powerplants.csv` from the repository, so it does not need a
 network connection to load the data at runtime.
 
+## Databestanden koppelen
+
+`powerplants.csv` bevat de gegevens van de centrales.
+`co2_emissions.csv` bevat per centrale een geschatte jaarlijkse CO₂-uitstoot.
+Beide bestanden gebruiken dezelfde unieke `id`.
+Je kunt ze bijvoorbeeld koppelen met pandas:
+
+```python
+powerplants = pd.read_csv("powerplants.csv", index_col=0)
+co2 = pd.read_csv("co2_emissions.csv").set_index("id")
+result = powerplants.join(co2["EstimatedAnnualCO2_tonnes"])
+```
+
+De CO₂-waarden zijn schattingen op basis van vermogen, capaciteitsfactor en brandstof.
+
 ## Run Locally
 
 In terminal, run:

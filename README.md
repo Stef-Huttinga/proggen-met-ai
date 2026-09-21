@@ -1,64 +1,44 @@
-# Streamlit Tutorial with `powerplantmatching` Data
+# Power Plants in Europe
 
-This tutorial builds a minimal interactive dashboard
-using [`streamlit`](https://streamlit.io/), [`plotly`](https://plotly.com/python/) and
-the bundled dataset from [`powerplantmatching`](https://github.com/PyPSA/powerplantmatching).
+Een interactieve Streamlit-app voor het verkennen van Europese energiecentrales en
+geschatte jaarlijkse operationele CO₂-uitstoot.
 
-## Installation
+De app gebruikt data uit het `powerplantmatching`-project en toont centrales op een
+kaart, met filters voor brandstoftype en ingebruiknamejaar.
 
-Install `uv`, then create the project environment and lock dependencies:
+## Installatie
+
+Installeer [uv](https://docs.astral.sh/uv/) en maak de omgeving aan:
 
 ```sh
 uv sync
 ```
 
-The shell already provides the `UV_INDEX_ARTIFACTORY_USERNAME` and
-`UV_INDEX_ARTIFACTORY_PASSWORD` variables used by `uv` when an Artifactory
-index is configured for this project.
+De runtime gebruikt alleen de meegeleverde CSV-bestanden en heeft geen netwerkverbinding
+nodig om de app te starten.
 
-The app reads `powerplants.csv` from the repository, so it does not need a
-network connection to load the data at runtime.
-
-## Databestanden koppelen
-
-`powerplants.csv` bevat de gegevens van de centrales.
-`co2_emissions.csv` bevat per centrale een geschatte jaarlijkse CO₂-uitstoot.
-Beide bestanden gebruiken dezelfde unieke `id`.
-Je kunt ze bijvoorbeeld koppelen met pandas:
-
-```python
-powerplants = pd.read_csv("powerplants.csv", index_col=0)
-co2 = pd.read_csv("co2_emissions.csv").set_index("id")
-result = powerplants.join(co2["EstimatedAnnualCO2_tonnes"])
-```
-
-De CO₂-waarden zijn schattingen op basis van vermogen, capaciteitsfactor en brandstof.
-
-## Run Locally
-
-In terminal, run:
+## Starten
 
 ```sh
 uv run streamlit run app.py
 ```
 
-## Files
+## Databestanden
 
+- `powerplants.csv` bevat de eigenschappen, locaties en metadata van centrales.
+- `co2_emissions.csv` bevat per centrale de geschatte jaarlijkse CO₂-uitstoot.
+
+Beide bestanden gebruiken dezelfde unieke `id`. De uitstootschatting is gebaseerd op
+geïnstalleerd vermogen, een capaciteitsfactor en een directe emissiefactor.
+
+## Projectstructuur
+
+```text
+app.py              Streamlit-applicatie
+co2_emissions.csv   CO₂-schattingen per centrale
+powerplants.csv     Centrale- en locatiegegevens
+pyproject.toml      Projectmetadata en afhankelijkheden
 ```
-├── requirements.txt      pip packages
-├── powerplants.csv       local power-plant dataset
-├── .streamlit            
-│   └── config.toml       streamlit configuration file
-├── app.py                streamlit app
-├── LICENSE
-└── README.md
-```
 
-
-## Learn More about Streamlit
-
-To deepen your understanding of Streamlit, check out these resources:
-
-- [Streamlit Official Documentation](https://docs.streamlit.io/)
-- [Streamlit Tutorials on YouTube](https://youtube.com/playlist?list=PLgkF0qak9G4-TC9_tKW1V4GRcJ9cdmnlx&si=qbE4JUDV3iS8ksp1)
-- [Streamlit Youtube channel for more](https://www.youtube.com/@streamlitofficial)
+Meer informatie over Streamlit staat in de
+[officiële documentatie](https://docs.streamlit.io/).

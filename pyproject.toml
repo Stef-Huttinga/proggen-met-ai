@@ -1,3 +1,12 @@
+[[tool.uv.index]]
+name = "artifactory"
+url = "https://alliander.jfrog.io/artifactory/api/pypi/pypi-all/simple"
+default = true
+authenticate = "always"
+
+[tool.uv]
+exclude-newer = "7 days"
+
 [project]
 name = "streamlit-tutorial"
 version = "0.1.0"

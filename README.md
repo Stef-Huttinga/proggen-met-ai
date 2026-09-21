@@ -2,54 +2,36 @@
 
 This tutorial builds a minimal interactive dashboard
 using [`streamlit`](https://streamlit.io/), [`plotly`](https://plotly.com/python/) and
-data from [`powerplantmatching`](https://github.com/PyPSA/powerplantmatching).
-
-## Download
-
-With `git` run:
-
-```sh
-git clone https://github.com/fneum/streamlit-tutorial.git
-```
-
-or
-
-```sh
-git clone git@github.com:fneum/streamlit-tutorial.git
-```
-
-Otherwise, download [ZIP file](https://github.com/fneum/streamlit-tutorial/archive/refs/heads/main.zip).
+the bundled dataset from [`powerplantmatching`](https://github.com/PyPSA/powerplantmatching).
 
 ## Installation
 
-With `pip` run:
+Install `uv`, then create the project environment and lock dependencies:
 
 ```sh
-pip install -r requirements.txt
+uv sync
 ```
+
+The shell already provides the `UV_INDEX_ARTIFACTORY_USERNAME` and
+`UV_INDEX_ARTIFACTORY_PASSWORD` variables used by `uv` when an Artifactory
+index is configured for this project.
+
+The app reads `powerplants.csv` from the repository, so it does not need a
+network connection to load the data at runtime.
 
 ## Run Locally
 
 In terminal, run:
 
 ```sh
-streamlit run app.py
+uv run streamlit run app.py
 ```
-
-## Deploy on the Web
-
-Go to https://share.streamlit.io/ and follow instructions there.
-
-## Live Demo
-
-You can find a live demo of the app here:
-
-https://ppm-dash.streamlit.app/
 
 ## Files
 
 ```
 ├── requirements.txt      pip packages
+├── powerplants.csv       local power-plant dataset
 ├── .streamlit            
 │   └── config.toml       streamlit configuration file
 ├── app.py                streamlit app
